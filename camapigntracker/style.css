@@ -1,0 +1,159 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* BODY */
+body {
+  background: linear-gradient(135deg, #5f9cff, #6a5acd);
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* AUTH PAGES */
+.container {
+  width: 350px;
+  padding: 30px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  margin: auto;
+  margin-top: 120px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  animation: slideUp 0.6s ease;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* INPUT */
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #5f9cff;
+  box-shadow: 0 0 12px rgba(95,156,255,0.5);
+  transform: scale(1.02);
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #5f9cff, #6a5acd);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* DASHBOARD */
+.dashboard {
+  display: flex;
+  height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 230px;
+  background: #1e293b;
+  color: white;
+  padding: 20px;
+  animation: slideLeft 0.5s ease;
+}
+
+.sidebar h2 {
+  margin-bottom: 30px;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  padding: 12px;
+  margin: 12px 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidebar li:hover {
+  background: #334155;
+  transform: translateX(8px);
+}
+
+/* MAIN AREA */
+.main {
+  flex: 1;
+  padding: 30px;
+  background: #f1f5f9;
+  overflow-y: auto;
+  animation: fadeIn 0.5s ease;
+}
+
+/* CARDS */
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px) scale(1.02);
+}
+
+/* PAGE TRANSITION */
+.fade {
+  animation: fadeIn 0.4s ease;
+}
+
+/* LOADING */
+.loader {
+  text-align: center;
+  margin-top: 20px;
+  font-weight: bold;
+  animation: pulse 1s infinite;
+}
+
+/* ANIMATIONS */
+@keyframes slideUp {
+  from {opacity: 0; transform: translateY(40px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes slideLeft {
+  from {opacity: 0; transform: translateX(-40px);}
+  to {opacity: 1; transform: translateX(0);}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes pulse {
+  0% {opacity: 0.5;}
+  50% {opacity: 1;}
+  100% {opacity: 0.5;}
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Courses</h1>
+<div id="courses"></div>
+
+<script>
+fetch('http://localhost:5000/courses')
+.then(res => res.json())
+.then(data => {
+    let html = '';
+    data.forEach(c => {
+        html += `
+        <div class="card">
+            <h3>${c.title}</h3>
+            <p>${c.description}</p>
+            <button onclick="enroll(${c.id})">Enroll</button>
+        </div>`;
+    });
+    document.getElementById('courses').innerHTML = html;
+});
+</script>
+
+<script src="script.js"></script>
+</body>
+</html>
