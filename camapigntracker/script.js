@@ -1,6 +1,5 @@
 function loadPage(page) {
   const main = document.getElementById("mainContent");
-
   main.innerHTML = `<div class="loader">Loading...</div>`;
 
   setTimeout(() => {
@@ -29,6 +28,7 @@ function loadPage(page) {
     }
   }, 300);
 }
+
 // Register
 function register() {
   fetch("https://web-production-ef9b1.up.railway.app/auth/register", {
@@ -41,7 +41,7 @@ function register() {
     })
   }).then(() => {
     alert("Registered successfully!");
-    window.location = "login.html";
+    window.location = "/camapigntracker/login.html";
   });
 }
 
@@ -59,6 +59,47 @@ function login() {
   .then(data => {
     localStorage.setItem("token", data.token);
     alert("Login successful!");
-    window.location = "dashboard.html";
+    window.location = "/camapigntracker/dashboard.html";
   });
+}
+
+// Create Campaign
+function createCampaign() {
+  const token = localStorage.getItem("token");
+  fetch("https://web-production-ef9b1.up.railway.app/campaign", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({
+      name: document.getElementById("name").value,
+      source: document.getElementById("source").value,
+      medium: document.getElementById("medium").value,
+      budget: document.getElementById("budget").value
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert("Campaign created successfully!");
+  });
+}
+
+// Get Analytics
+function getAnalytics() {
+  const token = localStorage.getItem("token");
+  const id = document.getElementById("campaignId").value;
+  fetch("https://web-production-ef9b1.up.railway.app/analytics/" + id, {
+    headers: { "Authorization": "Bearer " + token }
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("result").innerHTML = JSON.stringify(data, null, 2);
+  });
+}
+
+// Logout
+function logout() {
+  localStorage.removeItem("token");
+  window.location = "/camapigntracker/login.html";
 }
