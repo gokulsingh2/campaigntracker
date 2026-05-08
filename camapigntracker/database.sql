@@ -1,19 +1,14 @@
-
--- Paste the contents of camapigntracker/database.sql and run it
-CREATE DATABASE campaign_tracker;
+CREATE DATABASE IF NOT EXISTS campaign_tracker;
 USE campaign_tracker;
 
-CREATE TABLE users ( ... );
-CREATE TABLE campaigns ( ... );
-
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100),
   email VARCHAR(100) UNIQUE,
   password VARCHAR(255)
 );
 
-CREATE TABLE campaigns (
+CREATE TABLE IF NOT EXISTS campaigns (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100),
   source VARCHAR(100),
@@ -22,7 +17,7 @@ CREATE TABLE campaigns (
   user_id INT
 );
 
-CREATE TABLE clicks (
+CREATE TABLE IF NOT EXISTS clicks (
   id INT AUTO_INCREMENT PRIMARY KEY,
   campaign_id INT,
   ip_address VARCHAR(45),
@@ -30,7 +25,7 @@ CREATE TABLE clicks (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE conversions (
+CREATE TABLE IF NOT EXISTS conversions (
   id INT AUTO_INCREMENT PRIMARY KEY,
   campaign_id INT,
   conversion_type VARCHAR(100),

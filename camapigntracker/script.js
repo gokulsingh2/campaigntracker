@@ -31,7 +31,7 @@ function loadPage(page) {
 }
 // Register
 function register() {
-  fetch("http://localhost:5000/auth/register", {
+  fetch("https://web-production-ef9b1.up.railway.app/auth/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -47,7 +47,7 @@ function register() {
 
 // Login
 function login() {
-  fetch("http://localhost:5000/auth/login", {
+  fetch("https://web-production-ef9b1.up.railway.app/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

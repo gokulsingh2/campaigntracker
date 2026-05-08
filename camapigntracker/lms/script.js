@@ -1,4 +1,4 @@
-const API = "http://localhost:5000";
+const API = "https://web-production-ef9b1.up.railway.app";
 
 /* Register */
 function register() {
