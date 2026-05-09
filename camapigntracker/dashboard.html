@@ -1,21 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard</title>
+  <title>Dashboard - Campaign Tracker</title>
   <link rel="stylesheet" href="/camapigntracker/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="dashboard">
     <div class="sidebar">
-      <h2>Tracker</h2>
+      <div class="sidebar-brand">
+        <div class="brand-icon">CT</div>
+        <h2>Tracker</h2>
+      </div>
       <ul>
-        <li onclick="loadPage('create')">Create</li>
-        <li onclick="loadPage('analytics')">Analytics</li>
-        <li onclick="logout()">Logout</li>
+        <li onclick="loadPage('create')">
+          <span class="nav-icon">+</span> Create Campaign
+        </li>
+        <li onclick="loadPage('analytics')">
+          <span class="nav-icon">&#9998;</span> Analytics
+        </li>
+        <li onclick="loadPage('campaigns')">
+          <span class="nav-icon">&#9776;</span> My Campaigns
+        </li>
+        <li class="logout-btn" onclick="logout()">
+          <span class="nav-icon">&#8594;</span> Logout
+        </li>
       </ul>
     </div>
+
     <div class="main" id="mainContent">
-      <h2>Welcome 📈</h2>
+      <div class="welcome-screen">
+        <div class="welcome-badge">Campaign Tracker</div>
+        <h1 class="welcome-title">Welcome back, Gokul!</h1>
+        <p class="welcome-subtitle">Manage and track your marketing campaigns from one place.</p>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">&#128200;</div>
+            <div class="stat-info">
+              <div class="stat-number">1</div>
+              <div class="stat-label">Campaigns</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">&#128link;</div>
+            <div class="stat-info">
+              <div class="stat-number">0</div>
+              <div class="stat-label">Total Clicks</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">&#9989;</div>
+            <div class="stat-info">
+              <div class="stat-number">0</div>
+              <div class="stat-label">Conversions</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">&#128176;</div>
+            <div class="stat-info">
+              <div class="stat-number">$0</div>
+              <div class="stat-label">Revenue</div>
+            </div>
+          </div>
+        </div>
+        <button onclick="loadPage('create')" class="cta-btn">+ Create New Campaign</button>
+      </div>
     </div>
   </div>
   <script src="/camapigntracker/script.js"></script>
