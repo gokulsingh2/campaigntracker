@@ -167,7 +167,18 @@ function createCampaign() {
   })
   .then(res => res.json())
   .then(data => {
-    alert("Campaign created! ID: " + data.id);
+    const main = document.getElementById("mainContent");
+    main.innerHTML = `
+      <div class="fade">
+        <div style="text-align: center; padding: 60px 20px;">
+          <div style="font-size: 48px; margin-bottom: 20px; color: var(--success);">&#10003;</div>
+          <h2 style="color: var(--success); margin-bottom: 10px;">Campaign Created!</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 30px;">Your campaign has been created with ID: ${data.id}</p>
+          <button onclick="loadPage('create')" class="cta-btn" style="width: auto; padding: 12px 24px; margin-right: 10px;">+ Create Another</button>
+          <button onclick="loadPage('campaigns')" class="cta-btn" style="width: auto; padding: 12px 24px;">View Campaigns</button>
+        </div>
+      </div>
+    `;
   })
   .catch(err => alert("Error: " + err));
 }
@@ -195,7 +206,6 @@ function deleteCampaign(id) {
   })
   .then(res => res.json())
   .then(() => {
-    alert("Campaign deleted!");
     loadPage("campaigns");
   })
   .catch(err => alert("Error: " + err));
