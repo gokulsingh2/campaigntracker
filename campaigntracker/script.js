@@ -43,7 +43,7 @@ function register() {
     })
   }).then(() => {
     alert("Registered successfully!");
-    window.location = "/camapigntracker/login.html";
+    window.location = "/campaigntracker/login.html";
   });
 }
 
@@ -62,7 +62,7 @@ function login() {
     if (data.token) {
       localStorage.setItem("token", data.token);
       alert("Login successful!");
-      window.location = "/camapigntracker/dashboard.html";
+      window.location = "/campaigntracker/dashboard.html";
     } else {
       alert("Login failed: " + JSON.stringify(data));
     }
@@ -109,5 +109,5 @@ function getAnalytics() {
 // Logout
 function logout() {
   localStorage.removeItem("token");
-  window.location = "/camapigntracker/login.html";
+  window.location = "/campaigntracker/login.html";
 }
