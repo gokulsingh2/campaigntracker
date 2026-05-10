@@ -159,8 +159,7 @@ function createCampaign() {
       name: document.getElementById("name").value,
       source: document.getElementById("source").value,
       medium: document.getElementById("medium").value,
-      budget: document.getElementById("budget").value,
-      user_id: 1
+      budget: document.getElementById("budget").value
     })
   })
   .then(res => res.json())
