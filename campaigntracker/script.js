@@ -91,9 +91,12 @@ function loadPage(page) {
           let html = `<div class="fade"><h2>My Campaigns</h2>`;
           data.forEach(c => {
             html += `
-              <div class="card">
-                <h3 style="color: var(--text-primary); margin-bottom: 8px;">${c.name}</h3>
-                <p style="color: var(--text-secondary); font-size: 13px;">Source: ${c.source} | Medium: ${c.medium} | Budget: ₹${c.budget}</p>
+              <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <h3 style="color: var(--text-primary); margin-bottom: 8px;">ID: ${c.id} — ${c.name}</h3>
+                  <p style="color: var(--text-secondary); font-size: 13px;">Source: ${c.source} | Medium: ${c.medium} | Budget: ₹${c.budget}</p>
+                </div>
+                <button onclick="deleteCampaign(${c.id})" style="width: auto; padding: 8px 16px; background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); margin-top: 0;">Delete</button>
               </div>
             `;
           });
@@ -180,6 +183,22 @@ function getAnalytics() {
   .then(data => {
     document.getElementById("result").innerHTML = JSON.stringify(data, null, 2);
   });
+}
+
+// Delete Campaign
+function deleteCampaign(id) {
+  if (!confirm("Are you sure you want to delete this campaign?")) return;
+  const token = localStorage.getItem("token");
+  fetch(API + "/campaign/delete/" + id, {
+    method: "DELETE",
+    headers: { "Authorization": "Bearer " + token }
+  })
+  .then(res => res.json())
+  .then(() => {
+    alert("Campaign deleted!");
+    loadPage("campaigns");
+  })
+  .catch(err => alert("Error: " + err));
 }
 
 // Logout

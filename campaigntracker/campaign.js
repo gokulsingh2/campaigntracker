@@ -47,4 +47,19 @@ router.get("/all", verifyToken, (req, res) => {
   );
 });
 
+// Delete Campaign
+router.delete("/delete/:id", verifyToken, (req, res) => {
+  const campaign_id = req.params.id;
+  const user_id = req.userId;
+
+  db.query(
+    "DELETE FROM campaigns WHERE id = ? AND user_id = ?",
+    [campaign_id, user_id],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: "Campaign deleted" });
+    }
+  );
+});
+
 module.exports = router;
