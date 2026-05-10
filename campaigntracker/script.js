@@ -1,5 +1,47 @@
 const API = "https://web-production-ef9b1.up.railway.app";
 
+function loadWelcome() {
+  const main = document.getElementById("mainContent");
+  main.innerHTML = `
+    <div class="welcome-screen">
+      <div class="welcome-badge">Campaign Tracker</div>
+      <h1 class="welcome-title">Welcome!</h1>
+      <p class="welcome-subtitle">Manage and track your marketing campaigns from one place.</p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">&#128196;</div>
+          <div class="stat-info">
+            <div class="stat-number">1</div>
+            <div class="stat-label">Campaigns</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">&#9654;</div>
+          <div class="stat-info">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Total Clicks</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">&#10003;</div>
+          <div class="stat-info">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Conversions</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">&#8377;</div>
+          <div class="stat-info">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Revenue</div>
+          </div>
+        </div>
+      </div>
+      <button onclick="loadPage('create')" class="cta-btn">+ Create New Campaign</button>
+    </div>
+  `;
+}
+
 function loadPage(page) {
   const main = document.getElementById("mainContent");
   main.innerHTML = `<div class="loader">Loading...</div>`;
@@ -27,6 +69,41 @@ function loadPage(page) {
           <div id="result"></div>
         </div>
       `;
+    }
+
+    if (page === "campaigns") {
+      main.innerHTML = `<div class="loader">Loading campaigns...</div>`;
+      const token = localStorage.getItem("token");
+      fetch(API + "/campaign/all", {
+        headers: { "Authorization": "Bearer " + token }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (!data || data.length === 0) {
+          main.innerHTML = `
+            <div class="fade">
+              <h2>My Campaigns</h2>
+              <p style="color: var(--text-secondary); margin-top: 20px;">No campaigns yet. Create your first one!</p>
+              <button onclick="loadPage('create')" class="cta-btn" style="margin-top: 20px;">+ Create Campaign</button>
+            </div>
+          `;
+        } else {
+          let html = `<div class="fade"><h2>My Campaigns</h2>`;
+          data.forEach(c => {
+            html += `
+              <div class="card">
+                <h3 style="color: var(--text-primary); margin-bottom: 8px;">${c.name}</h3>
+                <p style="color: var(--text-secondary); font-size: 13px;">Source: ${c.source} | Medium: ${c.medium} | Budget: ₹${c.budget}</p>
+              </div>
+            `;
+          });
+          html += `</div>`;
+          main.innerHTML = html;
+        }
+      })
+      .catch(() => {
+        main.innerHTML = `<div class="fade"><h2>My Campaigns</h2><p style="color: var(--danger);">Failed to load campaigns.</p></div>`;
+      });
     }
   }, 300);
 }
