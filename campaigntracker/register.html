@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Register</title>
+  <title>Register - Campaign Tracker</title>
   <link rel="stylesheet" href="/campaigntracker/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
-    <h2>Register</h2>
-    <input id="name" placeholder="Name">
-    <input id="email" placeholder="Email">
-    <input id="password" type="password">
-    <button onclick="register()">Register</button>
+    <div class="auth-logo">
+      <div class="brand-icon" style="width:44px;height:44px;font-size:14px;margin: 0 auto 16px;">CT</div>
+    </div>
+    <h2>Create Account</h2>
+    <p style="text-align:center; color: var(--text-secondary); font-size: 14px; margin-top: -16px; margin-bottom: 24px;">Join Campaign Tracker today</p>
+    <input id="name" placeholder="Full Name">
+    <input id="email" placeholder="Email Address">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="register()">Create Account</button>
+    <p onclick="location='/campaigntracker/login.html'">Already have an account? Login</p>
   </div>
   <script src="/campaigntracker/script.js"></script>
 </body>
