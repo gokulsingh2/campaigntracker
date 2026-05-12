@@ -1,5 +1,13 @@
 const API = "https://web-production-ef9b1.up.railway.app";
 
+// Redirect if not logged in
+if (document.querySelector(".dashboard")) {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location = "/campaigntracker/login.html";
+  }
+}
+
 function setActive(page) {
   document.querySelectorAll(".sidebar li").forEach(li => li.classList.remove("active"));
   const items = document.querySelectorAll(".sidebar li");
