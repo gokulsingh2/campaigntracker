@@ -12,17 +12,17 @@ app.use("/auth", require("./auth"));
 app.use("/campaign", require("./campaign"));
 app.use("/track", require("./track"));
 app.use("/analytics", require("./analytics"));
+app.use("/profile", require("./profile"));
 
-// 404 Handler — catches any unknown route
+// 404 Handler
 app.use((req, res) => {
-  // If it's an API call return JSON error
-  if (req.originalUrl.startsWith("/auth") || 
-      req.originalUrl.startsWith("/campaign") || 
-      req.originalUrl.startsWith("/track") || 
-      req.originalUrl.startsWith("/analytics")) {
+  if (req.originalUrl.startsWith("/auth") ||
+      req.originalUrl.startsWith("/campaign") ||
+      req.originalUrl.startsWith("/track") ||
+      req.originalUrl.startsWith("/analytics") ||
+      req.originalUrl.startsWith("/profile")) {
     return res.status(404).json({ message: "Route not found" });
   }
-  // Otherwise serve the 404 page
   res.status(404).sendFile(path.join(__dirname, '404.html'));
 });
 

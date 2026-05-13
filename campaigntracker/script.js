@@ -14,6 +14,7 @@ function setActive(page) {
   if (page === "create") items[0].classList.add("active");
   if (page === "analytics") items[1].classList.add("active");
   if (page === "campaigns") items[2].classList.add("active");
+  if (page === "profile") items[3].classList.add("active");
 }
 
 // ===== WELCOME SCREEN WITH REAL STATS =====
@@ -226,10 +227,125 @@ function loadPage(page) {
         main.innerHTML = `<div class="fade"><h2>My Campaigns</h2><p style="color: var(--danger);">Failed to load campaigns.</p></div>`;
       });
     }
+
+    if (page === "profile") {
+      main.innerHTML = `<div class="loader">Loading profile...</div>`;
+      fetch(API + "/profile", {
+        headers: { "Authorization": "Bearer " + token }
+      })
+      .then(res => res.json())
+      .then(user => {
+        const joined = new Date(user.created_at).toLocaleDateString("en-IN", {
+          year: "numeric", month: "long", day: "numeric"
+        });
+        main.innerHTML = `
+          <div class="fade">
+            <h2>My Profile</h2>
+
+            <!-- Profile Card -->
+            <div class="card" style="display: flex; align-items: center; gap: 20px; margin-bottom: 8px;">
+              <div style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; color: white; flex-shrink: 0;">
+                ${user.name.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <div style="font-size: 20px; font-weight: 700; color: var(--text-primary);">${user.name}</div>
+                <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">${user.email}</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Member since ${joined}</div>
+              </div>
+            </div>
+
+            <!-- Update Name -->
+            <div class="card" style="margin-top: 16px;">
+              <h3 style="color: var(--text-primary); font-size: 15px; font-weight: 600; margin-bottom: 16px;">Update Name</h3>
+              <input id="new_name" placeholder="New Name" value="${user.name}">
+              <button onclick="updateName()" style="margin-top: 12px;">Save Name</button>
+            </div>
+
+            <!-- Update Password -->
+            <div class="card" style="margin-top: 16px;">
+              <h3 style="color: var(--text-primary); font-size: 15px; font-weight: 600; margin-bottom: 16px;">Change Password</h3>
+              <input id="current_password" type="password" placeholder="Current Password">
+              <input id="new_password" type="password" placeholder="New Password (min 6 characters)">
+              <input id="confirm_password" type="password" placeholder="Confirm New Password">
+              <button onclick="updatePassword()" style="margin-top: 12px;">Update Password</button>
+            </div>
+          </div>
+        `;
+      })
+      .catch(() => {
+        main.innerHTML = `<div class="fade"><h2>My Profile</h2><p style="color:var(--danger)">Failed to load profile.</p></div>`;
+      });
+    }
   }, 300);
 }
 
-// ===== EDIT CAMPAIGN (show form) =====
+// ===== UPDATE NAME =====
+function updateName() {
+  const name = document.getElementById("new_name").value.trim();
+  if (!name) { alert("Name cannot be empty!"); return; }
+
+  const token = localStorage.getItem("token");
+  fetch(API + "/profile/update-name", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({ name })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.message === "Name updated successfully") {
+      alert("Name updated successfully!");
+      loadPage("profile");
+    } else {
+      alert(data.message || "Update failed!");
+    }
+  })
+  .catch(() => alert("Failed to update name. Try again!"));
+}
+
+// ===== UPDATE PASSWORD =====
+function updatePassword() {
+  const currentPassword = document.getElementById("current_password").value.trim();
+  const newPassword = document.getElementById("new_password").value.trim();
+  const confirmPassword = document.getElementById("confirm_password").value.trim();
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    alert("All fields are required!");
+    return;
+  }
+  if (newPassword.length < 6) {
+    alert("New password must be at least 6 characters!");
+    return;
+  }
+  if (newPassword !== confirmPassword) {
+    alert("New passwords do not match!");
+    return;
+  }
+
+  const token = localStorage.getItem("token");
+  fetch(API + "/profile/update-password", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({ currentPassword, newPassword })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.message === "Password updated successfully") {
+      alert("Password updated successfully!");
+      loadPage("profile");
+    } else {
+      alert(data.message || "Update failed!");
+    }
+  })
+  .catch(() => alert("Failed to update password. Try again!"));
+}
+
+// ===== EDIT CAMPAIGN =====
 function editCampaign(id, name, source, medium, budget, status, start_date, end_date) {
   const main = document.getElementById("mainContent");
   main.innerHTML = `
@@ -306,18 +422,9 @@ function register() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  if (!name || !email || !password) {
-    alert("All fields are required!");
-    return;
-  }
-  if (!email.includes("@")) {
-    alert("Please enter a valid email address!");
-    return;
-  }
-  if (password.length < 6) {
-    alert("Password must be at least 6 characters!");
-    return;
-  }
+  if (!name || !email || !password) { alert("All fields are required!"); return; }
+  if (!email.includes("@")) { alert("Please enter a valid email address!"); return; }
+  if (password.length < 6) { alert("Password must be at least 6 characters!"); return; }
 
   fetch(API + "/auth/register", {
     method: "POST",
@@ -341,10 +448,7 @@ function login() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  if (!email || !password) {
-    alert("Email and password are required!");
-    return;
-  }
+  if (!email || !password) { alert("Email and password are required!"); return; }
 
   fetch(API + "/auth/login", {
     method: "POST",
@@ -373,14 +477,8 @@ function createCampaign() {
   const start_date = document.getElementById("start_date").value;
   const end_date = document.getElementById("end_date").value;
 
-  if (!name || !source || !medium || !budget) {
-    alert("All fields are required!");
-    return;
-  }
-  if (isNaN(budget) || Number(budget) < 0) {
-    alert("Budget must be a valid positive number!");
-    return;
-  }
+  if (!name || !source || !medium || !budget) { alert("All fields are required!"); return; }
+  if (isNaN(budget) || Number(budget) < 0) { alert("Budget must be a valid positive number!"); return; }
 
   const token = localStorage.getItem("token");
   fetch(API + "/campaign/create", {
@@ -415,10 +513,7 @@ function getAnalytics() {
   const select = document.getElementById("campaignSelect");
   const id = select.value;
 
-  if (!id) {
-    alert("Please select a campaign first!");
-    return;
-  }
+  if (!id) { alert("Please select a campaign first!"); return; }
 
   document.getElementById("result").innerHTML = `<div class="loader">Loading analytics...</div>`;
 
@@ -466,7 +561,6 @@ function getAnalytics() {
       </div>
     `;
 
-    // Draw chart
     const ctx = document.getElementById("analyticsChart").getContext("2d");
     new Chart(ctx, {
       type: "bar",
@@ -493,9 +587,7 @@ function getAnalytics() {
       },
       options: {
         responsive: true,
-        plugins: {
-          legend: { labels: { color: "#94a3b8" } }
-        },
+        plugins: { legend: { labels: { color: "#94a3b8" } } },
         scales: {
           x: { ticks: { color: "#94a3b8" }, grid: { color: "rgba(148,163,184,0.1)" } },
           y: { ticks: { color: "#94a3b8" }, grid: { color: "rgba(148,163,184,0.1)" }, beginAtZero: true }
@@ -517,9 +609,7 @@ function deleteCampaign(id) {
     headers: { "Authorization": "Bearer " + token }
   })
   .then(res => res.json())
-  .then(() => {
-    loadPage("campaigns");
-  })
+  .then(() => loadPage("campaigns"))
   .catch(() => alert("Failed to delete campaign. Try again!"));
 }
 
