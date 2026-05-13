@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reset Password - Campaign Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/campaigntracker/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="auth-logo">
+      <div class="brand-icon" style="width:44px;height:44px;font-size:14px;margin: 0 auto 16px;">CT</div>
+    </div>
+    <h2>Reset Password</h2>
+    <p style="text-align:center; color: var(--text-secondary); font-size: 14px; margin-top: -16px; margin-bottom: 24px;">Enter your new password below</p>
+    <input id="newPassword" type="password" placeholder="New Password (min 6 characters)">
+    <input id="confirmPassword" type="password" placeholder="Confirm New Password">
+    <button onclick="resetPassword()">Reset Password</button>
+    <div id="msg" style="margin-top: 16px; text-align: center; font-size: 14px;"></div>
+    <p onclick="location='/campaigntracker/login.html'">← Back to Login</p>
+  </div>
+  <script>
+    const API = "https://web-production-ef9b1.up.railway.app";
+
+    // Get token and id from URL
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    const id = params.get("id");
+
+    if (!token || !id) {
+      document.getElementById("msg").style.color = "#ef4444";
+      document.getElementById("msg").textContent = "Invalid reset link!";
+    }
+
+    function resetPassword() {
+      const newPassword = document.getElementById("newPassword").value.trim();
+      const confirmPassword = document.getElementById("confirmPassword").value.trim();
+      const msg = document.getElementById("msg");
+
+      if (!newPassword || !confirmPassword) {
+        msg.style.color = "#ef4444";
+        msg.textContent = "All fields are required!";
+        return;
+      }
+      if (newPassword.length < 6) {
+        msg.style.color = "#ef4444";
+        msg.textContent = "Password must be at least 6 characters!";
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        msg.style.color = "#ef4444";
+        msg.textContent = "Passwords do not match!";
+        return;
+      }
+
+      msg.style.color = "#94a3b8";
+      msg.textContent = "Resetting password...";
+
+      fetch(API + "/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, token, newPassword })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.message === "Password reset successfully!") {
+          msg.style.color = "#10b981";
+          msg.textContent = "✓ Password reset! Redirecting to login...";
+          setTimeout(() => {
+            window.location = "/campaigntracker/login.html";
+          }, 2000);
+        } else {
+          msg.style.color = "#ef4444";
+          msg.textContent = data.message || "Reset failed!";
+        }
+      })
+      .catch(() => {
+        msg.style.color = "#ef4444";
+        msg.textContent = "Something went wrong. Try again!";
+      });
+    }
+  </script>
+</body>
+</html>

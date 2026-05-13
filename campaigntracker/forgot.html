@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forgot Password - Campaign Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/campaigntracker/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="auth-logo">
+      <div class="brand-icon" style="width:44px;height:44px;font-size:14px;margin: 0 auto 16px;">CT</div>
+    </div>
+    <h2>Forgot Password</h2>
+    <p style="text-align:center; color: var(--text-secondary); font-size: 14px; margin-top: -16px; margin-bottom: 24px;">Enter your email and we'll send you a reset link</p>
+    <input id="email" placeholder="Email Address" type="email">
+    <button onclick="forgotPassword()">Send Reset Link</button>
+    <div id="msg" style="margin-top: 16px; text-align: center; font-size: 14px;"></div>
+    <p onclick="location='/campaigntracker/login.html'">← Back to Login</p>
+  </div>
+  <script>
+    const API = "https://web-production-ef9b1.up.railway.app";
+
+    function forgotPassword() {
+      const email = document.getElementById("email").value.trim();
+      const msg = document.getElementById("msg");
+
+      if (!email) { msg.style.color = "#ef4444"; msg.textContent = "Please enter your email!"; return; }
+
+      msg.style.color = "#94a3b8";
+      msg.textContent = "Sending reset link...";
+
+      fetch(API + "/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.message === "Reset email sent! Check your inbox.") {
+          msg.style.color = "#10b981";
+          msg.textContent = "✓ Reset link sent! Check your inbox.";
+        } else {
+          msg.style.color = "#ef4444";
+          msg.textContent = data.message || "Something went wrong!";
+        }
+      })
+      .catch(() => {
+        msg.style.color = "#ef4444";
+        msg.textContent = "Something went wrong. Try again!";
+      });
+    }
+  </script>
+</body>
+</html>

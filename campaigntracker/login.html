@@ -2,9 +2,9 @@
 <html>
 <head>
   <title>Login - Campaign Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/campaigntracker/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
   <div class="container">
@@ -13,9 +13,10 @@
     </div>
     <h2>Welcome Back</h2>
     <p style="text-align:center; color: var(--text-secondary); font-size: 14px; margin-top: -16px; margin-bottom: 24px;">Login to your account</p>
-    <input id="email" placeholder="Email Address">
+    <input id="email" placeholder="Email Address" type="email">
     <input id="password" type="password" placeholder="Password">
     <button onclick="login()">Login</button>
+    <p onclick="location='/campaigntracker/forgot.html'" style="margin-top: 12px;">Forgot Password?</p>
     <p onclick="location='/campaigntracker/register.html'">Don't have an account? Register</p>
   </div>
   <script src="/campaigntracker/script.js"></script>

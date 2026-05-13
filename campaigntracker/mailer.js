@@ -1,0 +1,34 @@
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+function sendResetEmail(toEmail, resetLink) {
+  return transporter.sendMail({
+    from: `"Campaign Tracker" <${process.env.EMAIL_USER}>`,
+    to: toEmail,
+    subject: "Reset Your Password - Campaign Tracker",
+    html: `
+      <div style="font-family: 'Plus Jakarta Sans', Arial, sans-serif; max-width: 480px; margin: 0 auto; background: #1e293b; border-radius: 16px; padding: 40px; color: #f1f5f9;">
+        <div style="text-align: center; margin-bottom: 32px;">
+          <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #4f46e5, #06b6d4); border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: white;">CT</div>
+          <h1 style="font-size: 22px; font-weight: 800; margin-top: 16px; color: #f1f5f9;">Reset Your Password</h1>
+          <p style="color: #94a3b8; font-size: 14px; margin-top: 8px;">You requested a password reset for your Campaign Tracker account.</p>
+        </div>
+        <a href="${resetLink}" style="display: block; text-align: center; background: linear-gradient(135deg, #4f46e5, #3730a3); color: white; text-decoration: none; padding: 14px 28px; border-radius: 10px; font-weight: 700; font-size: 15px; margin-bottom: 24px;">
+          Reset My Password
+        </a>
+        <p style="color: #94a3b8; font-size: 13px; text-align: center;">This link expires in <strong style="color: #f1f5f9;">1 hour</strong>. If you didn't request this, ignore this email.</p>
+        <hr style="border: none; border-top: 1px solid rgba(148,163,184,0.15); margin: 24px 0;">
+        <p style="color: #64748b; font-size: 12px; text-align: center;">Campaign Tracker · Sent automatically</p>
+      </div>
+    `
+  });
+}
+
+module.exports = { sendResetEmail };
