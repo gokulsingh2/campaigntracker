@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const db = require("./db");
 const jwt = require("jsonwebtoken");
-const { sendConversionEmail } = require("./mailer");
 
 const SECRET = process.env.JWT_SECRET || "fallback_dev_secret";
 
@@ -53,36 +52,8 @@ router.post("/conversion", verifyToken, (req, res) => {
     db.query(
       "INSERT INTO conversions (campaign_id, conversion_type, revenue) VALUES (?, ?, ?)",
       [campaign_id, type, revenue || 0],
-      async (err) => {
+      (err) => {
         if (err) return res.status(500).json({ error: err.message });
-
-        // Send conversion notification email
-        try {
-          db.query(`
-            SELECT c.name AS campaign_name, u.email AS user_email, u.name AS user_name
-            FROM campaigns c
-            JOIN users u ON c.user_id = u.id
-            WHERE c.id = ?
-          `, [campaign_id], async (err, rows) => {
-            if (err) {
-              console.error("DB error for email:", err.message);
-              return;
-            }
-            if (rows.length > 0) {
-              const { campaign_name, user_email, user_name } = rows[0];
-              console.log("Sending email to:", user_email);
-              try {
-                await sendConversionEmail(user_email, user_name, campaign_name, type, revenue || 0);
-                console.log("Email sent successfully!");
-              } catch (mailErr) {
-                console.error("Mail send error:", mailErr.message);
-              }
-            }
-          });
-        } catch (emailErr) {
-          console.error("Email notification error:", emailErr.message);
-        }
-
         res.json({ message: "Conversion tracked" });
       }
     );
